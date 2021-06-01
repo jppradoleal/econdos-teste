@@ -1,0 +1,16 @@
+GET http://localhost:8080/usuarios HTTP/1.1
+
+###
+
+POST http://localhost:8080/usuarios HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Vinicius",
+  "email": "vinicius.prado2007@hotmail.com",
+  "dateOfBirth": "16/11/1996"
+}
+
+###
+
+GET http://localhost:8080/usuarios?amount=2 HTTP/1.1
