@@ -31,6 +31,7 @@ router.get("/usuarios/:id", async (req: Request, res: Response) => {
 });
 
 router.post("/usuarios", async (req: Request, res: Response) => {
+  console.log(req.body);
   const userRepository = getRepository(User);
   const user = await userRepository.create(req.body);
   const results = await userRepository.save(user);

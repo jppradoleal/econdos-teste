@@ -1,5 +1,6 @@
 import Head from "next/head";
 import React from "react";
+import useSWR from "swr";
 import NavBar from "../components/NavBar";
 import {
   Box,
@@ -13,10 +14,23 @@ import {
   Td,
   TableCaption,
   Button,
-  ButtonGroup
+  ButtonGroup,
 } from "@chakra-ui/react";
+import { GetServerSideProps } from "next";
 
-export default function Home() {
+interface IUser {
+  id: number;
+  name: string;
+  email: string;
+  dateOfBirth: string;
+}
+
+interface IProps {
+  users: IUser[];
+}
+
+export default function Home({ users }: IProps) {
+  console.log(users);
   return (
     <>
       <Head>
@@ -47,14 +61,16 @@ export default function Home() {
               </Tr>
             </Thead>
             <Tbody>
-              <Tr>
-                <Td>João</Td>
-                <Td>joaopedro0128@hotmail.com</Td>
-                <Td>03/11/2000</Td>
-              </Tr>
+              {users.map((e) => (
+                <Tr key={e.id}>
+                  <Td>{e.name}</Td>
+                  <Td>{e.email}</Td>
+                  <Td>{e.dateOfBirth}</Td>
+                </Tr>
+              ))}
             </Tbody>
             <TableCaption>
-              <ButtonGroup>  
+              <ButtonGroup>
                 <Button>Anterior</Button>
                 <Button>Próximo</Button>
               </ButtonGroup>
@@ -65,3 +81,22 @@ export default function Home() {
     </>
   );
 }
+
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  try {
+    const users = await fetch(API_URL + "/usuarios").then((data) =>
+      data.json()
+    );
+    return {
+      props: {
+        users,
+      },
+    };
+  } catch (e) {
+    return {
+      props: {},
+    };
+  }
+};
