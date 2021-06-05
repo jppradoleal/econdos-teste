@@ -12,6 +12,8 @@ interface IUserQuery {
 router.get("/usuarios", async (req: Request<unknown, unknown, unknown, IUserQuery>, res: Response) => {
     const userRepository = await getRepository(User);
     
+    const maxUsers = await userRepository.count();
+
     let queryBuilder = userRepository.createQueryBuilder();
     if(req.query.offset) {
       queryBuilder = queryBuilder.offset(req.query.offset);
@@ -20,9 +22,9 @@ router.get("/usuarios", async (req: Request<unknown, unknown, unknown, IUserQuer
       queryBuilder = queryBuilder.limit(req.query.amount)
     }
     
-    const users = await queryBuilder.getMany();
+    const users = await queryBuilder.orderBy("id").getMany();
 
-    res.json(users);
+    res.json({users, amount: maxUsers});
 });
 
 router.get("/usuarios/:id", async (req: Request, res: Response) => {

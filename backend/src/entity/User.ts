@@ -12,7 +12,7 @@ export class User {
     @Column()
     email: string;
 
-    @Column({name: "date_of_birth", nullable: true})
-    dateOfBirth: string;
+    @Column({name: "date_of_birth", nullable: true, type: "date"})
+    dateOfBirth: Date;
 
 }
